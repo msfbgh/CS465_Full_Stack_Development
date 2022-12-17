@@ -1,17 +1,28 @@
 const mongoose = require('mongoose');
 const host = process.env.DB_HOST || '127.0.0.1'
-const dbURI = 'mongodb://${host}/travlr';
+const dbURI = `mongodb://${host}/travlr`;
 const readLine = require('readline');
 
-//avoid 'current Server Discovery and Monitoring engine is deprecated'
-mongoose.set('useUnifiedTopology', true);
+//mongoose.set('useUnifiedTopology', true);
+mongoose.set('strictQuery', true);
 
-const connect = () => {
-  setTimeout(() => mongoose.connect(dbURI, {
-    useNewUrlParser: true,
-    useCreateIndex: true
-    }), 1000);
+if (process.env.NODE_ENV == 'production')
+{
+  dbURL = process.env.DB_HOST || process.env.MONGODB_URI;
 }
+
+//avoid 'current Server Discovery and Monitoring engine is deprecated'
+//const connect = () => {
+  //setTimeout(() => mongoose.connect(dbURI, {
+    //useCreateIndex: true
+    //}), 1000);
+//}
+
+mongoose.connect(dbURI,
+  err => {
+      if(err) throw err;
+      console.log('connected to MongoDB')
+  });
 
 mongoose.connection.on('connected', () => {
   console.log(`Mongoose connected`);
@@ -60,6 +71,6 @@ process.on('SIGTERM', () => {
   });
 });
 
-connect();
+//connect();
 
 require('./travlr');
