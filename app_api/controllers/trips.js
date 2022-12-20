@@ -39,6 +39,8 @@ const tripsFindCode = async (req, res) => {
 };
 
 const tripsUpdateTrip = async (req, res) => {
+    getUser(req, res,
+        (req, res) => {
     console.log(req.body);
     Trip.findOneAndUpdate({ 'code': req.params.tripCode }, {
         code: req.body.code,
@@ -67,9 +69,13 @@ const tripsUpdateTrip = async (req, res) => {
         .status(500) // server error
         .json(err);
         });
-    }
+    })
+};
+
 
 const tripsAddTrip = async (req, res) => {
+    getUser(req, res,
+        (req, res) => {
     Trip.create({
         code: req.body.code,
         name: req.body.name,
@@ -87,7 +93,12 @@ const tripsAddTrip = async (req, res) => {
             return res.status(201).json(trip);
         }
     });
+});
 };
+
+
+
+
 
 module.exports = {
     tripsList,

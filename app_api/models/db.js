@@ -12,11 +12,13 @@ if (process.env.NODE_ENV == 'production')
 }
 
 //avoid 'current Server Discovery and Monitoring engine is deprecated'
-//const connect = () => {
-  //setTimeout(() => mongoose.connect(dbURI, {
-    //useCreateIndex: true
-    //}), 1000);
-//}
+const connect = () => {
+  setTimeout(() => mongoose.connect(dbURI, {
+    useCreateIndex: true,
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+    }), 1000);
+}
 
 mongoose.connect(dbURI,
   err => {
@@ -64,6 +66,7 @@ process.on('SIGINT', () => {
     process.exit(0);
   });
 });
+
 // For Heroku app termination
 process.on('SIGTERM', () => {
   gracefulShutdown('Heroku app shutdown', () => {
@@ -71,6 +74,7 @@ process.on('SIGTERM', () => {
   });
 });
 
-//connect();
+connect();
 
 require('./travlr');
+require('./user');
